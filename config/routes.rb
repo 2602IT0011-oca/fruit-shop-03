@@ -1,4 +1,18 @@
 Rails.application.routes.draw do
+  get "orders/new"
+  get "mypage/show"
+  devise_for :users
+  resources :mypage, only: [:show] # ユーザ情報の詳細表示
+
+    resources :orders, only: [:index, :new, :create] do 
+    collection do
+      post :confirm   # 注文確認
+    end
+
+    member do
+      get :complete  # 注文完了
+    end
+  end
   get "products/new", to: "products#new"
   post "products", to: "products#create"
   get "products", to: "products#index", as: "index_products"

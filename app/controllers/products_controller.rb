@@ -48,4 +48,12 @@ class ProductsController < ApplicationController
     def product_params
       params.require(:product).permit(:name, :description, :price)
     end
+
+    # 管理者確認メソッド
+    def check_admin
+      unless current_user.admin_flg
+        # 管理者でない場合、商品一覧ページにリダイレクト
+        redirect_to products_path, alert: '管理者権限が必要です。'
+      end
+    end
 end
