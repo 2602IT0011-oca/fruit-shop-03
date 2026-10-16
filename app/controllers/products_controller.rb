@@ -11,6 +11,7 @@ class ProductsController < ApplicationController
     @product = Product.new(product_params)
     
     if @product.save
+      flash[:notice] = "商品を登録しました。"
       redirect_to root_path
     else
       render :new, status: :unprocessable_entity
@@ -46,7 +47,7 @@ class ProductsController < ApplicationController
   private
 
     def product_params
-      params.require(:product).permit(:name, :description, :price)
+      params.require(:product).permit(:name, :description, :price, :photo)  # パラメータにphotoを追加
     end
 
     # 管理者確認メソッド
