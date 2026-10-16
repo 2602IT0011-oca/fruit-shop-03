@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   # 商品詳細ページ（products#show）を見た場合のみ、セッションに商品IDを記録する
   before_action :store_recent_product
 
+  include PriceCalculations
+
   protected
 
   # サインアップ時に name と admin_flg を許可

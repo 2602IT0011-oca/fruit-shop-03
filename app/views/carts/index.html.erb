@@ -1,0 +1,87 @@
+
+<h1>カートの中身</h1>
+
+<% if session[:cart].present? && session[:cart].any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>商品名</th>
+        <th>個数</th>
+        <th>単価</th>
+        <th>小計</th>
+        <th>数量変更</th>
+        <th>削除</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% session[:cart].each do |item| %>
+        <% product = @products[item["id"].to_i] %>
+
+        <% if product %>
+          <tr>
+            <td>
+              <%= link_to product.name, product_path(product) %>
+            </td>
+
+            <td><%= item["count"] %></td>
+
+            <td>
+              <%= number_to_currency(
+                    product.price,
+                    unit: "¥",
+                    precision: 0
+                  ) %>
+            </td>
+
+            <td>
+              <%= number_to_currency(
+                    item["item_price"],
+                    unit: "¥",
+                    precision: 0
+                  ) %>
+            </td>
+
+            <td>
+              <%= form_with url: update_quantity_cart_path(product.id),
+                            method: :post,
+                            local: true do %>
+                <%= select_tag :count,
+                      options_for_select(
+                        (0..99).to_a,
+                        item["count"]
+                      ),
+                      onchange: "this.form.requestSubmit()" %>
+              <% end %>
+            </td>
+
+            <td>
+              <%= button_to "カートから消す",
+                    remove_item_cart_path(product.id),
+                    method: :delete,
+                    data: {
+                      turbo_confirm: "本当に削除しますか？"
+                    } %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <p>
+    <strong>
+      合計金額:
+      <%= number_to_currency(
+            session[:cart_total] || 0,
+            unit: "¥",
+            precision: 0
+          ) %>
+    </strong>
+  </p>
+
+  <%= link_to "ログインまたは新規登録して注文する",
+              new_user_session_path %>
+<% else %>
+  <p>カートは空です。</p>
+<% end %>

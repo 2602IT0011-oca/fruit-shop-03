@@ -36,9 +36,14 @@
           <% else %>
             <li><%= link_to "サインアップ", new_user_registration_path %></li>
             <li><%= link_to "ログイン", new_user_session_path %></li>
+            <li>
+              <%= link_to "カート", carts_path %>
+            </li>
           <% end %>
         </ul>
       </nav>
+
+      
       
     </header>
     <%= render "layouts/flash" %>

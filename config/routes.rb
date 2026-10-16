@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  resources :carts, only: [:show, :index] do
+    collection do
+      post :add_product
+    end
+
+    member do
+      delete :remove_item
+      post :update_quantity
+    end
+  end
   get "orders/new"
   get "mypage/show"
   devise_for :users

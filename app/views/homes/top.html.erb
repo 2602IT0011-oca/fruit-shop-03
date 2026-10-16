@@ -5,4 +5,19 @@
         <%= link_to "新規登録", products_new_path %>
         <%= link_to "商品一覧", products_path %>
     </div>
+    <h2>商品一覧</h2>
+
+    <% @products.each do |product| %>
+        <% if product.photo.attached? %>
+            <%= image_tag product.thumbnail %>
+        <% end %>
+
+        <br>
+
+        <%= link_to product.name, product_path(product) %>
+        <br>
+
+        <%= number_to_currency(product.price, unit: "¥", precision: 0) %>
+        <br>
+    <% end %>
 </main>

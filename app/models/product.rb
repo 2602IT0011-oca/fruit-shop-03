@@ -3,6 +3,7 @@ class Product < ApplicationRecord
     validates :price, presence: true
 
     has_many :orders
+    has_many :cart_items
 
     # Active Storage（商品画像）
     has_one_attached :photo
@@ -11,4 +12,5 @@ class Product < ApplicationRecord
     def thumbnail
       photo.variant(resize_to_limit: [150, 150]).processed  # 画像を 150x150 ピクセル以内にリサイズ
     end
+    
 end
