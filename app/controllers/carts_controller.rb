@@ -1,6 +1,10 @@
 class CartsController < ApplicationController
-   def show
-    redirect_to carts_path
+  def show
+    return redirect_to root_path unless user_signed_in?
+    return redirect_to products_path if current_user.admin_flg?
+
+    @cart = current_user.cart
+    user_cart_calculation
   end
 
   def index

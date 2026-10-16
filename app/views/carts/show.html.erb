@@ -1,2 +1,85 @@
-<h1>Carts#show</h1>
-<p>Find me in app/views/carts/show.html.erb</p>
+<h1>ユーザーカートの中身</h1>
+
+<% if @cart.present? && @cart.cart_items.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>商品名</th>
+        <th>個数</th>
+        <th>単価</th>
+        <th>小計</th>
+        <th>数量変更</th>
+        <th>削除</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @cart.cart_items.each_with_index do |item, index| %>
+        <tr>
+          <td>
+            <%= link_to item.product.name,
+                        product_path(item.product) %>
+          </td>
+
+          <td><%= item.quantity %></td>
+
+          <td>
+            <%= number_to_currency(
+                  item.product.price,
+                  unit: "¥",
+                  precision: 0
+                ) %>
+          </td>
+
+          <td>
+            <%= number_to_currency(
+                  @item_totals[index],
+                  unit: "¥",
+                  precision: 0
+                ) %>
+          </td>
+
+          <td>
+            <%= form_with scope: :cart_item,
+                          url: cart_item_path(item),
+                          method: :patch,
+                          local: true,
+                          data: { turbo: false } do |form| %>
+              <%= form.select :quantity,
+                  options_for_select(0..99, item.quantity),
+                  {},
+                  onchange: "this.form.submit()" %>
+            <% end %>
+          </td>
+
+          <td>
+            <%= button_to "カートから消す",
+                cart_item_path(item),
+                method: :delete,
+                form: {
+                  data: {
+                    turbo: false,
+                    turbo_confirm: "本当に削除しますか？"
+                  }
+                } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <p>
+    <strong>
+      合計金額:
+      <%= number_to_currency(
+            @cart_total,
+            unit: "¥",
+            precision: 0
+          ) %>
+    </strong>
+  </p>
+
+  <%= link_to "注文へ進む", new_order_path %>
+<% else %>
+  <p>カートは空です。</p>
+<% end %>

@@ -9,6 +9,9 @@ Rails.application.routes.draw do
       post :update_quantity
     end
   end
+
+  resources :cart_items, only: [:create, :update, :destroy]
+  
   get "orders/new"
   get "mypage/show"
   devise_for :users
